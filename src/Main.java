@@ -1,36 +1,42 @@
-import java.util.Iterator;
-import java.util.TreeMap;
+import java.io.IOException;
+import java.util.Scanner;
 
-public class Main{
-
-    public static void main(String[] args) {
-
-        TreeMap<NrTelefoniczny, Wpis> treeMap = new TreeMap<>();
-
-        NrTelefoniczny tel1 = new NrTelefoniczny(730262026, 48);
-        NrTelefoniczny tel2 = new NrTelefoniczny(796012131, 48);
-        NrTelefoniczny tel3 = new NrTelefoniczny(123456789, 68);
-        NrTelefoniczny tel4 = new NrTelefoniczny(987654321, 45);
-
-        Osoba osoba1 = new Osoba("Justyna", "Misior", "Wróbla 18a/2", tel1.getNrTelefonu());
-        osoba1.opis();
-        Osoba osoba2 = new Osoba("Mariusz", "Czajkowski", "Pięna 34/5/6", tel2.getNrTelefonu());
-        osoba2.opis();
-        Firma firma1 = new Firma("Gruby Benek", "Ulica 42", tel3.getNrTelefonu());
-        firma1.opis();
-        Firma firma2 = new Firma("PizzaPlace", "Aleja 26", tel4.getNrTelefonu());
-        firma2.opis();
-
-        treeMap.put(tel1, osoba1);
-        treeMap.put(tel2, osoba2);
-        treeMap.put(tel3, firma1);
-        treeMap.put(tel4, firma2);
-
-        for (Iterator i = treeMap.keySet().iterator(); i.hasNext();) {
-            Object key = i.next();
-            Wpis value = treeMap.get(key);
-            System.out.println(key + ": ");
-            value.opis();
+public class Main {
+    public static void main(String args[]){
+        String input;
+        Wektor wektor1, wektor2;
+        Scanner sc = new Scanner(System.in);
+        while(0 == 0){
+            System.out.println("Podaj dwa wektory rownej dlugosci. Wprowadzanie wektora zakończ wciśnięciem klawisza enter.");
+            input = sc.nextLine();
+	    if (input.compareTo("quit")==0)
+     		System.exit(0);
+            wektor1 = new Wektor(input);
+            if (wektor1.isPoprawnyWektor() == false)
+                continue;
+            input = sc.nextLine();
+	    if (input.compareTo("quit")==0)
+     		System.exit(0);
+            wektor2 = new Wektor(input);
+            if (wektor2.isPoprawnyWektor() == false)
+                continue;
+            System.out.println(wektor1.getWektor());
+            System.out.println(wektor2.getWektor());
+            try {
+                Wektor.sprawdzCzyWektorySaTejSamejDlugosci(wektor1, wektor2);
+            } catch (WektoryRoznejDlugosciException e){
+                e.getMessage();
+                System.out.println("Dlugosc pierwszego wektora to: " + e.getWektor1Size() + ", a drugiego to: " + e.getWektor2Size());
+                continue;
+            }
+            Wektor wektorWynikowy = Wektor.dodajDwaWektory(wektor1, wektor2);
+            System.out.println(wektorWynikowy.getWektor());
+            try {
+                wektorWynikowy.zapiszDoPliku("wektor.txt");
+                break;
+            } catch (IOException e){
+                System.out.println(e.getMessage());
+            }
         }
     }
 }
